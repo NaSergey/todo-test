@@ -99,7 +99,7 @@ export function TodoForm({ users, todo, defaultAssigneeId, onCancel, onSubmit }:
       />
 
       <div className="flex gap-2">
-        <Button type="submit" className={onCancel ? "flex-1" : ""}>
+        <Button type="submit" className="flex-1">
           {todo ? "Сохранить" : "Создать задачу"}
         </Button>
         {onCancel && (

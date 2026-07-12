@@ -8,11 +8,11 @@ import { TodoForm, type TodoFormValues } from "./components/todo/todo-form";
 import { CreateUserForm } from "./components/user/create-user-form";
 import { TodoBoard } from "./components/todo/todo-board";
 
-type HomeClientProps = {
+type MainPageProps = {
   initialUsers: User[];
 };
 
-export function HomeClient({ initialUsers }: HomeClientProps) {
+export function MainPage({ initialUsers }: MainPageProps) {
   const { data: users = [] } = useUsers(initialUsers);
   const { data: todos = [] } = useAllTodos();
 
@@ -54,9 +54,6 @@ export function HomeClient({ initialUsers }: HomeClientProps) {
   return (
     <div className="mx-auto flex w-full max-w-11/12 flex-1 gap-6 px-4 py-10">
       <aside className="flex w-64 shrink-0 flex-col gap-4">
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          To-Do
-        </h1>
         <CreateUserForm onSubmit={handleCreateUser} />
         <TodoForm users={users} onSubmit={handleCreateTodo} />
       </aside>

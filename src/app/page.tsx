@@ -1,8 +1,8 @@
 import { listUsers } from "@/server/user/service";
-import { HomeClient } from "./(main)/page";
+import { MainPage } from "./(main)/main-page";
 
 export default async function Home() {
   const users = await listUsers();
 
-  return <HomeClient initialUsers={users} />;
+  return <MainPage initialUsers={users} />;
 }
