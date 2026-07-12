@@ -22,6 +22,7 @@ async function main() {
     data: [
       {
         title: "Настроить CI",
+        description: "Настроить пайплайн непрерывной интеграции для автоматической сборки и проверки кода при каждом пуше",
         priority: "HIGH",
         pinned: true,
         creatorId: alice.id,
@@ -36,6 +37,7 @@ async function main() {
       },
       {
         title: "Обновить README",
+        description: "Актуализировать документацию проекта: описание установки, запуска и структуры",
         priority: "LOW",
         completed: true,
         creatorId: bob.id,
@@ -43,12 +45,14 @@ async function main() {
       },
       {
         title: "Ревью PR",
+        description: "Проверить открытые pull request'ы и оставить комментарии по качеству кода",
         priority: "MEDIUM",
         creatorId: bob.id,
         assigneeId: alice.id,
       },
       {
         title: "Идея на бэклог",
+        description: "Зафиксировать идею для дальнейшей проработки и приоритизации",
         priority: "LOW",
         creatorId: alice.id,
       },
