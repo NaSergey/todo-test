@@ -10,6 +10,18 @@ pnpm dev
 
 http://localhost:3000
 
+## Стек
+
+- **Next.js 16** (App Router) + **React 19**
+- **TypeScript**
+- **Prisma 7** + **SQLite** (`@prisma/adapter-better-sqlite3`)
+- **zod** — валидация и единый источник схем данных
+- **@asteasolutions/zod-to-openapi** — генерация `openapi.json` из zod-схем
+- **openapi-typescript** — генерация типов клиента из `openapi.json`
+- **openapi-fetch** + **openapi-react-query** — типизированный API-клиент и хуки
+- **TanStack React Query** — кэш и синхронизация состояния
+- **Tailwind CSS 4**
+
 ## Об использовании ИИ
 Сделал работу на совесть. 
 
