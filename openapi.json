@@ -153,7 +153,10 @@
             "minLength": 1
           },
           "description": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "priority": {
             "$ref": "#/components/schemas/Priority"
@@ -169,7 +172,10 @@
             "type": "integer"
           },
           "assigneeId": {
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           }
         },
         "required": [
@@ -185,7 +191,10 @@
             "minLength": 1
           },
           "description": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "priority": {
             "$ref": "#/components/schemas/Priority"
@@ -258,6 +267,9 @@
           },
           "400": {
             "description": "Validation error"
+          },
+          "409": {
+            "description": "Email already exists"
           }
         }
       }
@@ -282,6 +294,9 @@
           "204": {
             "description": "Deleted"
           },
+          "400": {
+            "description": "Invalid id"
+          },
           "404": {
             "description": "User not found"
           }
@@ -290,20 +305,7 @@
     },
     "/api/todos": {
       "get": {
-        "summary": "List todos (optionally filtered to one user's created/assigned tasks)",
-        "parameters": [
-          {
-            "schema": {
-              "type": [
-                "integer",
-                "null"
-              ]
-            },
-            "required": false,
-            "name": "userId",
-            "in": "query"
-          }
-        ],
+        "summary": "List all todos",
         "responses": {
           "200": {
             "description": "List of todos",
@@ -317,9 +319,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Invalid userId"
           }
         }
       },
@@ -346,7 +345,7 @@
             }
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation error or unknown creatorId/assigneeId"
           }
         }
       }
@@ -388,7 +387,7 @@
             }
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation error, invalid id, or unknown assigneeId"
           },
           "404": {
             "description": "Todo not found"
@@ -413,6 +412,9 @@
         "responses": {
           "204": {
             "description": "Deleted"
+          },
+          "400": {
+            "description": "Invalid id"
           },
           "404": {
             "description": "Todo not found"

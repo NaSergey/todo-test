@@ -40,10 +40,10 @@ export function TodoForm({ users, todo, defaultAssigneeId, onCancel, onSubmit }:
 
     onSubmit({
       title: title.trim(),
-      description: description.trim() || undefined,
+      description: description.trim() || null,
       priority,
-      dueDate: dueDate || undefined,
-      assigneeId: assigneeId ? Number(assigneeId) : undefined,
+      dueDate: dueDate || null,
+      assigneeId: assigneeId ? Number(assigneeId) : null,
       creatorId: todo ? todo.creator.id : Number(creatorId),
     });
 

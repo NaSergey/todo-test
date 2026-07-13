@@ -5,21 +5,21 @@ const prioritySchema = z.enum(["LOW", "MEDIUM", "HIGH"]).openapi("Priority");
 
 export const createTodoSchema = z
   .object({
-    title: z.string().min(1),
-    description: z.string().optional(),
+    title: z.string().trim().min(1),
+    description: z.string().nullable().optional(),
     priority: prioritySchema.optional(),
-    dueDate: z.coerce.date().optional(),
+    dueDate: z.coerce.date().nullable().optional(),
     creatorId: z.number().int(),
-    assigneeId: z.number().int().optional(),
+    assigneeId: z.number().int().nullable().optional(),
   })
   .openapi("CreateTodoInput");
 
 export const updateTodoSchema = z
   .object({
-    title: z.string().min(1).optional(),
-    description: z.string().optional(),
+    title: z.string().trim().min(1).optional(),
+    description: z.string().nullable().optional(),
     priority: prioritySchema.optional(),
-    dueDate: z.coerce.date().optional(),
+    dueDate: z.coerce.date().nullable().optional(),
     assigneeId: z.number().int().nullable().optional(),
     completed: z.boolean().optional(),
     pinned: z.boolean().optional(),

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Menu, MenuItem } from "@/shared/ui/menu";
 import type { CreateTodoInput, Todo, TodoParticipant } from "@/entities/todo/types";
-import { TodoForm, type TodoFormValues } from "./todo-form";
+import { TodoForm, type TodoFormValues } from "@/features/todo-form/todo-form";
 import { TodoItem } from "./todo-item";
 
 type TodoBoardProps = {

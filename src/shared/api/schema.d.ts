@@ -63,6 +63,13 @@ export interface paths {
                     };
                     content?: never;
                 };
+                /** @description Email already exists */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
             };
         };
         delete?: never;
@@ -100,6 +107,13 @@ export interface paths {
                     };
                     content?: never;
                 };
+                /** @description Invalid id */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
                 /** @description User not found */
                 404: {
                     headers: {
@@ -121,12 +135,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List todos (optionally filtered to one user's created/assigned tasks) */
+        /** List all todos */
         get: {
             parameters: {
-                query?: {
-                    userId?: number | null;
-                };
+                query?: never;
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -141,13 +153,6 @@ export interface paths {
                     content: {
                         "application/json": components["schemas"]["Todo"][];
                     };
-                };
-                /** @description Invalid userId */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
                 };
             };
         };
@@ -175,7 +180,7 @@ export interface paths {
                         "application/json": components["schemas"]["Todo"];
                     };
                 };
-                /** @description Validation error */
+                /** @description Validation error or unknown creatorId/assigneeId */
                 400: {
                     headers: {
                         [name: string]: unknown;
@@ -219,6 +224,13 @@ export interface paths {
                     };
                     content?: never;
                 };
+                /** @description Invalid id */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
                 /** @description Todo not found */
                 404: {
                     headers: {
@@ -255,7 +267,7 @@ export interface paths {
                         "application/json": components["schemas"]["Todo"];
                     };
                 };
-                /** @description Validation error */
+                /** @description Validation error, invalid id, or unknown assigneeId */
                 400: {
                     headers: {
                         [name: string]: unknown;
@@ -312,16 +324,16 @@ export interface components {
         };
         CreateTodoInput: {
             title: string;
-            description?: string;
+            description?: string | null;
             priority?: components["schemas"]["Priority"];
             /** Format: date-time */
             dueDate?: string | null;
             creatorId: number;
-            assigneeId?: number;
+            assigneeId?: number | null;
         };
         UpdateTodoInput: {
             title?: string;
-            description?: string;
+            description?: string | null;
             priority?: components["schemas"]["Priority"];
             /** Format: date-time */
             dueDate?: string | null;

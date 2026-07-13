@@ -4,9 +4,9 @@ import { useAllTodos, useCreateTodo, useDeleteTodo, useUpdateTodo } from "@/enti
 import type { CreateTodoInput } from "@/entities/todo/types";
 import { useCreateUser, useDeleteUser, useUsers } from "@/entities/user/hooks";
 import type { CreateUserInput, User } from "@/entities/user/types";
-import { TodoForm, type TodoFormValues } from "./components/todo/todo-form";
-import { CreateUserForm } from "./components/user/create-user-form";
-import { TodoBoard } from "./components/todo/todo-board";
+import { TodoForm, type TodoFormValues } from "@/features/todo-form/todo-form";
+import { CreateUserForm } from "@/features/create-user/create-user-form";
+import { TodoBoard } from "@/app/(main)/components/todo-board/todo-board";
 
 type MainPageProps = {
   initialUsers: User[];

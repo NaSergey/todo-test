@@ -1,7 +1,7 @@
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
 import type { Priority, TodoParticipant } from "@/entities/todo/types";
-import { PRIORITY_OPTIONS } from "./priority-badge";
+import { PRIORITY_OPTIONS } from "@/entities/todo/priority";
 
 export function toUserOptions(users: TodoParticipant[]) {
   return users.map((user) => ({ value: String(user.id), label: user.name }));

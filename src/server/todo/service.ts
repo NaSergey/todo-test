@@ -11,12 +11,8 @@ export function createTodo(input: z.infer<typeof createTodoSchema>) {
   });
 }
 
-export function listTodos(userId?: number) {
+export function listTodos() {
   return db.todo.findMany({
-    where:
-      userId !== undefined
-        ? { OR: [{ creatorId: userId }, { assigneeId: userId }] }
-        : undefined,
     orderBy: { createdAt: "desc" },
     include: { creator: participantSelect, assignee: participantSelect },
   });

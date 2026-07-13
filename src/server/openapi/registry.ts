@@ -31,6 +31,7 @@ registry.registerPath({
       content: { "application/json": { schema: userSchema } },
     },
     400: { description: "Validation error" },
+    409: { description: "Email already exists" },
   },
 });
 
@@ -43,6 +44,7 @@ registry.registerPath({
   },
   responses: {
     204: { description: "Deleted" },
+    400: { description: "Invalid id" },
     404: { description: "User not found" },
   },
 });
@@ -50,16 +52,12 @@ registry.registerPath({
 registry.registerPath({
   method: "get",
   path: "/api/todos",
-  summary: "List todos (optionally filtered to one user's created/assigned tasks)",
-  request: {
-    query: z.object({ userId: z.coerce.number().int().optional() }),
-  },
+  summary: "List all todos",
   responses: {
     200: {
       description: "List of todos",
       content: { "application/json": { schema: z.array(todoSchema) } },
     },
-    400: { description: "Invalid userId" },
   },
 });
 
@@ -75,7 +73,7 @@ registry.registerPath({
       description: "Created todo",
       content: { "application/json": { schema: todoSchema } },
     },
-    400: { description: "Validation error" },
+    400: { description: "Validation error or unknown creatorId/assigneeId" },
   },
 });
 
@@ -92,7 +90,7 @@ registry.registerPath({
       description: "Updated todo",
       content: { "application/json": { schema: todoSchema } },
     },
-    400: { description: "Validation error" },
+    400: { description: "Validation error, invalid id, or unknown assigneeId" },
     404: { description: "Todo not found" },
   },
 });
@@ -106,6 +104,7 @@ registry.registerPath({
   },
   responses: {
     204: { description: "Deleted" },
+    400: { description: "Invalid id" },
     404: { description: "Todo not found" },
   },
 });

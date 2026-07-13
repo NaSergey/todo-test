@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Badge } from "@/shared/ui/badge";
 import { Checkbox } from "@/shared/ui/checkbox";
 import type { Todo, TodoParticipant } from "@/entities/todo/types";
-import { PriorityBadge } from "./priority-badge";
-import { TodoForm, type TodoFormValues } from "./todo-form";
+import { priorityVariant, priorityLabels } from "@/entities/todo/priority";
+import { TodoForm, type TodoFormValues } from "@/features/todo-form/todo-form";
 
 type TodoItemProps = {
   todo: Todo;
@@ -56,7 +57,7 @@ export function TodoItem({
         </h3>
 
         <div className={`shrink-0 ${todo.completed ? "opacity-50" : ""}`}>
-          <PriorityBadge priority={todo.priority} />
+          <Badge variant={priorityVariant[todo.priority]}>{priorityLabels[todo.priority]}</Badge>
         </div>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5">
@@ -109,7 +110,7 @@ export function TodoItem({
         </p>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
           {todo.dueDate &&
-            `Срок: ${new Date(todo.dueDate).toLocaleDateString()}`}
+            `Срок: ${new Date(todo.dueDate).toLocaleDateString(undefined, { timeZone: "UTC" })}`}
         </p>
       </div>
     </li>

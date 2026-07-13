@@ -3,8 +3,9 @@ import { z } from "zod";
 
 export const createUserSchema = z
   .object({
-    name: z.string().min(1),
-    email: z.string().email(),
+    name: z.string().trim().min(1),
+    // trim + lowercase, иначе SQLite-@unique пропустит "Ivan@x.com" и "ivan@x.com" как разных пользователей
+    email: z.string().trim().toLowerCase().email(),
   })
   .openapi("CreateUserInput");
 

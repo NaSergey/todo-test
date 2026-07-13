@@ -1,15 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { rqClient } from "@/shared/api/client";
 
-export function useTodos(userId: number | null) {
-  return rqClient.useQuery(
-    "get",
-    "/api/todos",
-    { params: { query: { userId: userId as number } } },
-    { enabled: userId !== null }
-  );
-}
-
 /** All todos across every user — used for the board view. */
 export function useAllTodos() {
   return rqClient.useQuery("get", "/api/todos");

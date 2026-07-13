@@ -42,3 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 /src/server/generated/prisma
+
+# database (создаётся и сидится автоматически при pnpm dev)
+*.db
+*.db-journal
