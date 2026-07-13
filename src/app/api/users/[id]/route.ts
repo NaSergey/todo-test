@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { mapPrismaError } from "@/server/http/prisma-error";
-import { idSchema } from "@/server/http/id-schema";
+import { parseId } from "@/server/http/id-schema";
 import { deleteUser } from "@/server/user/service";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
-  const { id } = await params;
-  const parsedId = idSchema.safeParse(id);
-  if (!parsedId.success) {
-    return NextResponse.json({ error: "id must be a positive integer" }, { status: 400 });
-  }
+  const { id: rawId } = await params;
+  const id = parseId(rawId);
+  if (id instanceof NextResponse) return id;
 
   try {
-    await deleteUser(parsedId.data);
+    await deleteUser(id);
     return new NextResponse(null, { status: 204 });
   } catch (e) {
     const mapped = mapPrismaError(e, { P2025: "User not found" });

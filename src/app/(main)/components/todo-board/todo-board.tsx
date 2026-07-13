@@ -1,18 +1,14 @@
 import { useMemo, useState } from "react";
 import { Menu, MenuItem } from "@/shared/ui/menu";
-import type { CreateTodoInput, Todo, TodoParticipant } from "@/entities/todo/types";
-import { TodoForm, type TodoFormValues } from "@/features/todo-form/todo-form";
+import type { Todo, TodoParticipant } from "@/entities/todo/types";
+import { useCreateTodo } from "@/entities/todo/hooks";
+import { useDeleteUser } from "@/entities/user/hooks";
+import { TodoForm } from "@/features/todo-form/todo-form";
 import { TodoItem } from "./todo-item";
 
 type TodoBoardProps = {
   todos: Todo[];
   users: TodoParticipant[];
-  onCreateTodo: (data: CreateTodoInput) => void;
-  onToggleCompleted: (id: number, completed: boolean) => void;
-  onTogglePinned: (id: number, pinned: boolean) => void;
-  onEdit: (id: number, data: TodoFormValues) => void;
-  onDelete: (id: number) => void;
-  onDeleteUser: (id: number) => void;
 };
 
 function sortByPinned(todos: Todo[]) {
@@ -38,21 +34,25 @@ function buildColumns(todos: Todo[], users: TodoParticipant[]) {
   ];
 }
 
-export function TodoBoard({
-  todos,
-  users,
-  onCreateTodo,
-  onDeleteUser,
-  ...handlers
-}: TodoBoardProps) {
+export function TodoBoard({ todos, users }: TodoBoardProps) {
   const [addingForColumn, setAddingForColumn] = useState<string | null>(null);
+  const createTodo = useCreateTodo();
+  const deleteUser = useDeleteUser();
 
   const columns = useMemo(() => buildColumns(todos, users), [todos, users]);
 
+  function handleDeleteUser(id: number) {
+    if (!window.confirm("Удалить пользователя вместе со всеми его задачами?")) return;
+    deleteUser.mutate({ params: { path: { id } } });
+  }
+
   return (
-    <div className="flex gap-4 overflow-x-auto pb-2">
+    <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:snap-none">
       {columns.map((column) => (
-        <div key={column.key} className="flex w-72 shrink-0 flex-col gap-3">
+        <div
+          key={column.key}
+          className="flex w-72 max-w-[80vw] shrink-0 snap-start flex-col gap-3 sm:max-w-none"
+        >
           <h2 className="flex items-center justify-between gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-50">
             <span className="flex items-center gap-2">
               {column.title}
@@ -67,7 +67,7 @@ export function TodoBoard({
                   type="button"
                   onClick={() => setAddingForColumn(column.key)}
                   aria-label="Добавить задачу без исполнителя"
-                  className="cursor-pointer text-base leading-none text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200"
+                  className="cursor-pointer p-1 text-base leading-none text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-200"
                 >
                   +
                 </button>
@@ -79,7 +79,7 @@ export function TodoBoard({
                 </MenuItem>
                 <MenuItem
                   variant="danger"
-                  onClick={() => onDeleteUser(column.userId as number)}
+                  onClick={() => handleDeleteUser(column.userId as number)}
                 >
                   Удалить пользователя
                 </MenuItem>
@@ -93,7 +93,7 @@ export function TodoBoard({
               defaultAssigneeId={column.userId ?? undefined}
               onCancel={() => setAddingForColumn(null)}
               onSubmit={(data) => {
-                onCreateTodo(data);
+                createTodo.mutate({ body: data });
                 setAddingForColumn(null);
               }}
             />
@@ -106,7 +106,7 @@ export function TodoBoard({
           ) : (
             <ul className="flex flex-col gap-3">
               {column.todos.map((todo) => (
-                <TodoItem key={todo.id} todo={todo} users={users} {...handlers} />
+                <TodoItem key={todo.id} todo={todo} users={users} />
               ))}
             </ul>
           )}

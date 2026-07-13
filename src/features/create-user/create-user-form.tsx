@@ -1,13 +1,10 @@
 import { useState, type FormEvent } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
-import type { CreateUserInput } from "@/entities/user/types";
+import { useCreateUser } from "@/entities/user/hooks";
 
-type CreateUserFormProps = {
-  onSubmit: (data: CreateUserInput) => void;
-};
-
-export function CreateUserForm({ onSubmit }: CreateUserFormProps) {
+export function CreateUserForm() {
+  const createUser = useCreateUser();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
@@ -15,7 +12,7 @@ export function CreateUserForm({ onSubmit }: CreateUserFormProps) {
     e.preventDefault();
     if (!name.trim() || !email.trim()) return;
 
-    onSubmit({ name: name.trim(), email: email.trim() });
+    createUser.mutate({ body: { name: name.trim(), email: email.trim() } });
     setName("");
     setEmail("");
   }

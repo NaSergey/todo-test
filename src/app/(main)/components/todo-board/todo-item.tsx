@@ -3,26 +3,18 @@ import { Badge } from "@/shared/ui/badge";
 import { Checkbox } from "@/shared/ui/checkbox";
 import type { Todo, TodoParticipant } from "@/entities/todo/types";
 import { priorityVariant, priorityLabels } from "@/entities/todo/priority";
-import { TodoForm, type TodoFormValues } from "@/features/todo-form/todo-form";
+import { useDeleteTodo, useUpdateTodo } from "@/entities/todo/hooks";
+import { TodoForm } from "@/features/todo-form/todo-form";
 
 type TodoItemProps = {
   todo: Todo;
   users: TodoParticipant[];
-  onToggleCompleted: (id: number, completed: boolean) => void;
-  onTogglePinned: (id: number, pinned: boolean) => void;
-  onEdit: (id: number, data: TodoFormValues) => void;
-  onDelete: (id: number) => void;
 };
 
-export function TodoItem({
-  todo,
-  users,
-  onToggleCompleted,
-  onTogglePinned,
-  onEdit,
-  onDelete,
-}: TodoItemProps) {
+export function TodoItem({ todo, users }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const updateTodo = useUpdateTodo();
+  const deleteTodo = useDeleteTodo();
 
   if (isEditing) {
     return (
@@ -31,7 +23,7 @@ export function TodoItem({
         users={users}
         onCancel={() => setIsEditing(false)}
         onSubmit={(data) => {
-          onEdit(todo.id, data);
+          updateTodo.mutate({ params: { path: { id: todo.id } }, body: data });
           setIsEditing(false);
         }}
       />
@@ -60,10 +52,15 @@ export function TodoItem({
           <Badge variant={priorityVariant[todo.priority]}>{priorityLabels[todo.priority]}</Badge>
         </div>
 
-        <div className="ml-auto flex shrink-0 items-center gap-1.5">
+        <div className="ml-auto flex shrink-0 items-center gap-0.5">
           <Checkbox
             checked={todo.completed}
-            onChange={(e) => onToggleCompleted(todo.id, e.target.checked)}
+            onChange={(e) =>
+              updateTodo.mutate({
+                params: { path: { id: todo.id } },
+                body: { completed: e.target.checked },
+              })
+            }
             aria-label={todo.completed ? "Отметить как невыполненное" : "Отметить как выполненное"}
           />
 
@@ -71,16 +68,21 @@ export function TodoItem({
             type="button"
             onClick={() => setIsEditing(true)}
             aria-label="Редактировать"
-            className="cursor-pointer text-sm leading-none text-zinc-400 hover:text-zinc-700 dark:text-zinc-600 dark:hover:text-zinc-300"
+            className="cursor-pointer p-1 text-sm leading-none text-zinc-400 hover:text-zinc-700 dark:text-zinc-600 dark:hover:text-zinc-300"
           >
             ✎
           </button>
 
           <button
             type="button"
-            onClick={() => onTogglePinned(todo.id, !todo.pinned)}
+            onClick={() =>
+              updateTodo.mutate({
+                params: { path: { id: todo.id } },
+                body: { pinned: !todo.pinned },
+              })
+            }
             aria-label={todo.pinned ? "Открепить" : "Закрепить"}
-            className={`cursor-pointer text-lg leading-none ${
+            className={`cursor-pointer p-1 text-lg leading-none ${
               todo.pinned ? "text-amber-500" : "text-zinc-300 dark:text-zinc-700"
             }`}
           >
@@ -89,9 +91,9 @@ export function TodoItem({
 
           <button
             type="button"
-            onClick={() => onDelete(todo.id)}
+            onClick={() => deleteTodo.mutate({ params: { path: { id: todo.id } } })}
             aria-label="Удалить"
-            className="cursor-pointer text-sm leading-none text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400"
+            className="cursor-pointer p-1 text-sm leading-none text-red-500 hover:text-red-700 dark:text-red-500 dark:hover:text-red-400"
           >
             ✕
           </button>
@@ -106,7 +108,7 @@ export function TodoItem({
         )}
 
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
-          От: {todo.creator.name}
+          От: {todo.creator?.name ?? "Пользователь удалён"}
         </p>
         <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
           {todo.dueDate &&

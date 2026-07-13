@@ -1,10 +1,9 @@
 "use client";
 
-import { useAllTodos, useCreateTodo, useDeleteTodo, useUpdateTodo } from "@/entities/todo/hooks";
-import type { CreateTodoInput } from "@/entities/todo/types";
-import { useCreateUser, useDeleteUser, useUsers } from "@/entities/user/hooks";
-import type { CreateUserInput, User } from "@/entities/user/types";
-import { TodoForm, type TodoFormValues } from "@/features/todo-form/todo-form";
+import { useAllTodos, useCreateTodo } from "@/entities/todo/hooks";
+import { useUsers } from "@/entities/user/hooks";
+import type { User } from "@/entities/user/types";
+import { TodoForm } from "@/features/todo-form/todo-form";
 import { CreateUserForm } from "@/features/create-user/create-user-form";
 import { TodoBoard } from "@/app/(main)/components/todo-board/todo-board";
 
@@ -15,60 +14,17 @@ type MainPageProps = {
 export function MainPage({ initialUsers }: MainPageProps) {
   const { data: users = [] } = useUsers(initialUsers);
   const { data: todos = [] } = useAllTodos();
-
-  const createUser = useCreateUser();
-  const deleteUser = useDeleteUser();
   const createTodo = useCreateTodo();
-  const updateTodo = useUpdateTodo();
-  const deleteTodo = useDeleteTodo();
-
-  function handleCreateUser(data: CreateUserInput) {
-    createUser.mutate({ body: data });
-  }
-
-  function handleCreateTodo(data: CreateTodoInput) {
-    createTodo.mutate({ body: data });
-  }
-
-  function handleToggleCompleted(id: number, completed: boolean) {
-    updateTodo.mutate({ params: { path: { id } }, body: { completed } });
-  }
-
-  function handleTogglePinned(id: number, pinned: boolean) {
-    updateTodo.mutate({ params: { path: { id } }, body: { pinned } });
-  }
-
-  function handleEditTodo(id: number, data: TodoFormValues) {
-    updateTodo.mutate({ params: { path: { id } }, body: data });
-  }
-
-  function handleDelete(id: number) {
-    deleteTodo.mutate({ params: { path: { id } } });
-  }
-
-  function handleDeleteUser(id: number) {
-    if (!window.confirm("Удалить пользователя вместе со всеми его задачами?")) return;
-    deleteUser.mutate({ params: { path: { id } } });
-  }
 
   return (
-    <div className="mx-auto flex w-full max-w-11/12 flex-1 gap-6 px-4 py-10">
-      <aside className="flex w-64 shrink-0 flex-col gap-4">
-        <CreateUserForm onSubmit={handleCreateUser} />
-        <TodoForm users={users} onSubmit={handleCreateTodo} />
+    <div className="mx-auto flex w-full max-w-11/12 flex-1 flex-col gap-6 px-4 py-6 lg:flex-row lg:py-10">
+      <aside className="grid shrink-0 gap-4 sm:grid-cols-2 sm:items-start lg:flex lg:w-64 lg:flex-col lg:items-stretch">
+        <CreateUserForm />
+        <TodoForm users={users} onSubmit={(data) => createTodo.mutate({ body: data })} />
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col gap-6">
-        <TodoBoard
-          todos={todos}
-          users={users}
-          onCreateTodo={handleCreateTodo}
-          onToggleCompleted={handleToggleCompleted}
-          onTogglePinned={handleTogglePinned}
-          onEdit={handleEditTodo}
-          onDelete={handleDelete}
-          onDeleteUser={handleDeleteUser}
-        />
+        <TodoBoard todos={todos} users={users} />
       </main>
     </div>
   );

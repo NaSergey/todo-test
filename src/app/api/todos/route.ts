@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { createTodoSchema } from "@/server/todo/schema";
 import { createTodo, listTodos } from "@/server/todo/service";
 import { mapPrismaError } from "@/server/http/prisma-error";
+import { validateBody } from "@/server/http/validate-body";
 
 export async function GET() {
   const todos = await listTodos();
@@ -11,13 +11,11 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const parsed = createTodoSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: z.flattenError(parsed.error) }, { status: 400 });
-  }
+  const parsed = validateBody(createTodoSchema, body);
+  if (parsed instanceof NextResponse) return parsed;
 
   try {
-    const todo = await createTodo(parsed.data);
+    const todo = await createTodo(parsed);
     return NextResponse.json(todo, { status: 201 });
   } catch (e) {
     const mapped = mapPrismaError(e, { P2003: "Invalid creatorId or assigneeId" });

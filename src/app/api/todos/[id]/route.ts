@@ -1,27 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { mapPrismaError } from "@/server/http/prisma-error";
-import { idSchema } from "@/server/http/id-schema";
+import { parseId } from "@/server/http/id-schema";
+import { validateBody } from "@/server/http/validate-body";
 import { updateTodoSchema } from "@/server/todo/schema";
 import { updateTodo, deleteTodo } from "@/server/todo/service";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
 export async function PATCH(req: NextRequest, { params }: RouteParams) {
-  const { id } = await params;
-  const parsedId = idSchema.safeParse(id);
-  if (!parsedId.success) {
-    return NextResponse.json({ error: "id must be a positive integer" }, { status: 400 });
-  }
+  const { id: rawId } = await params;
+  const id = parseId(rawId);
+  if (id instanceof NextResponse) return id;
 
   const body = await req.json();
-  const parsed = updateTodoSchema.safeParse(body);
-  if (!parsed.success) {
-    return NextResponse.json({ error: z.flattenError(parsed.error) }, { status: 400 });
-  }
+  const parsed = validateBody(updateTodoSchema, body);
+  if (parsed instanceof NextResponse) return parsed;
 
   try {
-    const todo = await updateTodo(parsedId.data, parsed.data);
+    const todo = await updateTodo(id, parsed);
     return NextResponse.json(todo);
   } catch (e) {
     const mapped = mapPrismaError(e, { P2025: "Todo not found", P2003: "Invalid assigneeId" });
@@ -31,14 +27,12 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: RouteParams) {
-  const { id } = await params;
-  const parsedId = idSchema.safeParse(id);
-  if (!parsedId.success) {
-    return NextResponse.json({ error: "id must be a positive integer" }, { status: 400 });
-  }
+  const { id: rawId } = await params;
+  const id = parseId(rawId);
+  if (id instanceof NextResponse) return id;
 
   try {
-    await deleteTodo(parsedId.data);
+    await deleteTodo(id);
     return new NextResponse(null, { status: 204 });
   } catch (e) {
     const mapped = mapPrismaError(e, { P2025: "Todo not found" });

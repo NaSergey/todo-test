@@ -2,25 +2,26 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import {
-  Priority,
+import { Priority,
   type CreateTodoInput,
   type Todo,
   type TodoParticipant,
 } from "@/entities/todo/types";
 import { TodoFormFields, toUserOptions } from "./todo-form-fields";
 
-export type TodoFormValues = Omit<CreateTodoInput, "creatorId">;
+type TodoFormValues = Omit<CreateTodoInput, "creatorId">;
 
 type TodoFormProps = {
   users: TodoParticipant[];
-  todo?: Todo;
   defaultAssigneeId?: number;
   onCancel?: () => void;
-  onSubmit: (data: CreateTodoInput) => void;
-};
+} & (
+  | { todo: Todo; onSubmit: (data: TodoFormValues) => void }
+  | { todo?: undefined; onSubmit: (data: CreateTodoInput) => void }
+);
 
-export function TodoForm({ users, todo, defaultAssigneeId, onCancel, onSubmit }: TodoFormProps) {
+export function TodoForm(props: TodoFormProps) {
+  const { users, todo, defaultAssigneeId, onCancel } = props;
   const [creatorId, setCreatorId] = useState("");
   const [title, setTitle] = useState(todo?.title ?? "");
   const [description, setDescription] = useState(todo?.description ?? "");
@@ -38,14 +39,19 @@ export function TodoForm({ users, todo, defaultAssigneeId, onCancel, onSubmit }:
     e.preventDefault();
     if (!title.trim() || (!todo && !creatorId)) return;
 
-    onSubmit({
+    const values: TodoFormValues = {
       title: title.trim(),
       description: description.trim() || null,
       priority,
       dueDate: dueDate || null,
       assigneeId: assigneeId ? Number(assigneeId) : null,
-      creatorId: todo ? todo.creator.id : Number(creatorId),
-    });
+    };
+
+    if (props.todo) {
+      props.onSubmit(values);
+    } else {
+      props.onSubmit({ ...values, creatorId: Number(creatorId) });
+    }
 
     if (!todo) {
       setTitle("");

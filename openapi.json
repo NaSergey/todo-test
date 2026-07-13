@@ -82,7 +82,10 @@
             "format": "date-time"
           },
           "creatorId": {
-            "type": "integer"
+            "type": [
+              "integer",
+              "null"
+            ]
           },
           "assigneeId": {
             "type": [
@@ -91,18 +94,22 @@
             ]
           },
           "creator": {
-            "$ref": "#/components/schemas/TodoParticipant"
-          },
-          "assignee": {
-            "allOf": [
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/TodoParticipant"
               },
               {
-                "type": [
-                  "object",
-                  "null"
-                ]
+                "type": "null"
+              }
+            ]
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TodoParticipant"
+              },
+              {
+                "type": "null"
               }
             ]
           }
@@ -276,7 +283,7 @@
     },
     "/api/users/{id}": {
       "delete": {
-        "summary": "Delete a user (cascades: their created todos are deleted; assigned todos become unassigned)",
+        "summary": "Delete a user (their created todos lose the creator, their assigned todos become unassigned)",
         "parameters": [
           {
             "schema": {

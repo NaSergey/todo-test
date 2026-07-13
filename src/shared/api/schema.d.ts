@@ -88,7 +88,7 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** Delete a user (cascades: their created todos are deleted; assigned todos become unassigned) */
+        /** Delete a user (their created todos lose the creator, their assigned todos become unassigned) */
         delete: {
             parameters: {
                 query?: never;
@@ -311,10 +311,10 @@ export interface components {
             completed: boolean;
             /** Format: date-time */
             createdAt: string | null;
-            creatorId: number;
+            creatorId: number | null;
             assigneeId: number | null;
-            creator: components["schemas"]["TodoParticipant"];
-            assignee: components["schemas"]["TodoParticipant"] & (Record<string, never> | null);
+            creator: components["schemas"]["TodoParticipant"] | null;
+            assignee: components["schemas"]["TodoParticipant"] | null;
         };
         /** @enum {string} */
         Priority: "LOW" | "MEDIUM" | "HIGH";

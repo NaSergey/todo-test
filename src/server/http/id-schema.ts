@@ -1,4 +1,12 @@
+import { NextResponse } from "next/server";
 import { z } from "zod";
 
-/** Path-параметр id: без валидации Number("abc") = NaN уходит в Prisma и роняет запрос в 500 вместо 400. */
 export const idSchema = z.coerce.number().int().positive();
+
+export function parseId(raw: string): number | NextResponse {
+  const parsed = idSchema.safeParse(raw);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "id must be a positive integer" }, { status: 400 });
+  }
+  return parsed.data;
+}

@@ -33,6 +33,8 @@ const participantSchema = z
   })
   .openapi("TodoParticipant");
 
+const nullableParticipant = z.union([participantSchema, z.null()]);
+
 export const todoSchema = z
   .object({
     id: z.number().int(),
@@ -43,9 +45,9 @@ export const todoSchema = z
     dueDate: z.coerce.date().nullable(),
     completed: z.boolean(),
     createdAt: z.coerce.date(),
-    creatorId: z.number().int(),
+    creatorId: z.number().int().nullable(),
     assigneeId: z.number().int().nullable(),
-    creator: participantSchema,
-    assignee: participantSchema.nullable(),
+    creator: nullableParticipant,
+    assignee: nullableParticipant,
   })
   .openapi("Todo");

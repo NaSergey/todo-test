@@ -10,8 +10,8 @@ model Todo {
   completed Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  creatorId  Int
-  creator    User  @relation("TodoCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  creatorId  Int?
+  creator    User? @relation("TodoCreator", fields: [creatorId], references: [id], onDelete: SetNull)
 
   assigneeId Int?
   assignee   User? @relation("TodoAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)

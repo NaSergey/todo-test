@@ -38,7 +38,7 @@ registry.registerPath({
 registry.registerPath({
   method: "delete",
   path: "/api/users/{id}",
-  summary: "Delete a user (cascades: their created todos are deleted; assigned todos become unassigned)",
+  summary: "Delete a user (their created todos lose the creator, their assigned todos become unassigned)",
   request: {
     params: z.object({ id: z.coerce.number().int() }),
   },
