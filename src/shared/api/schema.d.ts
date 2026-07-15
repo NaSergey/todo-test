@@ -305,6 +305,7 @@ export interface components {
             title: string;
             description: string | null;
             priority: components["schemas"]["Priority"];
+            level: components["schemas"]["Level"];
             pinned: boolean;
             /** Format: date-time */
             dueDate: string | null;
@@ -318,6 +319,8 @@ export interface components {
         };
         /** @enum {string} */
         Priority: "LOW" | "MEDIUM" | "HIGH";
+        /** @enum {string} */
+        Level: "LOW" | "HIGH";
         TodoParticipant: {
             id: number;
             name: string;
@@ -326,6 +329,7 @@ export interface components {
             title: string;
             description?: string | null;
             priority?: components["schemas"]["Priority"];
+            level?: components["schemas"]["Level"];
             /** Format: date-time */
             dueDate?: string | null;
             creatorId: number;
@@ -335,6 +339,7 @@ export interface components {
             title?: string;
             description?: string | null;
             priority?: components["schemas"]["Priority"];
+            level?: components["schemas"]["Level"];
             /** Format: date-time */
             dueDate?: string | null;
             assigneeId?: number | null;

@@ -1,7 +1,7 @@
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import type { Priority, TodoParticipant } from "@/entities/todo/types";
-import { PRIORITY_OPTIONS } from "@/entities/todo/priority";
+import type { Level, Priority, TodoParticipant } from "@/entities/todo/types";
+import { LEVEL_OPTIONS, PRIORITY_OPTIONS } from "@/entities/todo/priority";
 
 export function toUserOptions(users: TodoParticipant[]) {
   return users.map((user) => ({ value: String(user.id), label: user.name }));
@@ -13,6 +13,8 @@ type TodoFormFieldsProps = {
   onDescriptionChange: (value: string) => void;
   priority: Priority;
   onPriorityChange: (value: Priority) => void;
+  level: Level;
+  onLevelChange: (value: Level) => void;
   assigneeId: string;
   onAssigneeIdChange: (value: string) => void;
   dueDate: string;
@@ -26,6 +28,8 @@ export function TodoFormFields({
   onDescriptionChange,
   priority,
   onPriorityChange,
+  level,
+  onLevelChange,
   assigneeId,
   onAssigneeIdChange,
   dueDate,
@@ -45,6 +49,13 @@ export function TodoFormFields({
         value={priority}
         onChange={(e) => onPriorityChange(e.target.value as Priority)}
         options={PRIORITY_OPTIONS}
+      />
+
+      <Select
+        label="Уровень"
+        value={level}
+        onChange={(e) => onLevelChange(e.target.value as Level)}
+        options={LEVEL_OPTIONS}
       />
 
       <Select

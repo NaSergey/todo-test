@@ -2,7 +2,7 @@ import { useState, type FormEvent } from "react";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import { Priority,
+import { Level, Priority,
   type CreateTodoInput,
   type Todo,
   type TodoParticipant,
@@ -26,6 +26,7 @@ export function TodoForm(props: TodoFormProps) {
   const [title, setTitle] = useState(todo?.title ?? "");
   const [description, setDescription] = useState(todo?.description ?? "");
   const [priority, setPriority] = useState<Priority>(todo?.priority ?? Priority.MEDIUM);
+  const [level, setLevel] = useState<Level>(todo?.level ?? Level.LOW);
   const [dueDate, setDueDate] = useState(todo?.dueDate ? todo.dueDate.slice(0, 10) : "");
   const [assigneeId, setAssigneeId] = useState(
     todo?.assignee
@@ -43,6 +44,7 @@ export function TodoForm(props: TodoFormProps) {
       title: title.trim(),
       description: description.trim() || null,
       priority,
+      level,
       dueDate: dueDate || null,
       assigneeId: assigneeId ? Number(assigneeId) : null,
     };
@@ -57,6 +59,7 @@ export function TodoForm(props: TodoFormProps) {
       setTitle("");
       setDescription("");
       setPriority(Priority.MEDIUM);
+      setLevel(Level.LOW);
       setDueDate("");
       setAssigneeId(defaultAssigneeId ? String(defaultAssigneeId) : "");
     }
@@ -98,6 +101,8 @@ export function TodoForm(props: TodoFormProps) {
         onDescriptionChange={setDescription}
         priority={priority}
         onPriorityChange={setPriority}
+        level={level}
+        onLevelChange={setLevel}
         assigneeId={assigneeId}
         onAssigneeIdChange={setAssigneeId}
         dueDate={dueDate}
