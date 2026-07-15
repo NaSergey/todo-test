@@ -3,8 +3,11 @@ import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 import { createUserSchema, userSchema } from "@/server/user/schema";
 import { createTodoSchema, todoSchema, updateTodoSchema } from "@/server/todo/schema";
+import { errorResponseSchema } from "@/server/http/error-response";
 
 export const registry = new OpenAPIRegistry();
+
+const errorContent = { content: { "application/json": { schema: errorResponseSchema } } };
 
 registry.registerPath({
   method: "get",
@@ -30,8 +33,8 @@ registry.registerPath({
       description: "Created user",
       content: { "application/json": { schema: userSchema } },
     },
-    400: { description: "Validation error" },
-    409: { description: "Email already exists" },
+    400: { description: "Validation error", ...errorContent },
+    409: { description: "Email already exists", ...errorContent },
   },
 });
 
@@ -44,8 +47,8 @@ registry.registerPath({
   },
   responses: {
     204: { description: "Deleted" },
-    400: { description: "Invalid id" },
-    404: { description: "User not found" },
+    400: { description: "Invalid id", ...errorContent },
+    404: { description: "User not found", ...errorContent },
   },
 });
 
@@ -73,7 +76,7 @@ registry.registerPath({
       description: "Created todo",
       content: { "application/json": { schema: todoSchema } },
     },
-    400: { description: "Validation error or unknown creatorId/assigneeId" },
+    400: { description: "Validation error or unknown creatorId/assigneeId", ...errorContent },
   },
 });
 
@@ -90,8 +93,8 @@ registry.registerPath({
       description: "Updated todo",
       content: { "application/json": { schema: todoSchema } },
     },
-    400: { description: "Validation error, invalid id, or unknown assigneeId" },
-    404: { description: "Todo not found" },
+    400: { description: "Validation error, invalid id, or unknown assigneeId", ...errorContent },
+    404: { description: "Todo not found", ...errorContent },
   },
 });
 
@@ -104,7 +107,7 @@ registry.registerPath({
   },
   responses: {
     204: { description: "Deleted" },
-    400: { description: "Invalid id" },
-    404: { description: "Todo not found" },
+    400: { description: "Invalid id", ...errorContent },
+    404: { description: "Todo not found", ...errorContent },
   },
 });
