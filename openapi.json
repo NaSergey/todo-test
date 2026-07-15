@@ -61,6 +61,9 @@
           "priority": {
             "$ref": "#/components/schemas/Priority"
           },
+          "level": {
+            "$ref": "#/components/schemas/Level"
+          },
           "pinned": {
             "type": "boolean"
           },
@@ -119,6 +122,7 @@
           "title",
           "description",
           "priority",
+          "level",
           "pinned",
           "dueDate",
           "completed",
@@ -134,6 +138,13 @@
         "enum": [
           "LOW",
           "MEDIUM",
+          "HIGH"
+        ]
+      },
+      "Level": {
+        "type": "string",
+        "enum": [
+          "LOW",
           "HIGH"
         ]
       },
@@ -167,6 +178,9 @@
           },
           "priority": {
             "$ref": "#/components/schemas/Priority"
+          },
+          "level": {
+            "$ref": "#/components/schemas/Level"
           },
           "dueDate": {
             "type": [
@@ -205,6 +219,9 @@
           },
           "priority": {
             "$ref": "#/components/schemas/Priority"
+          },
+          "level": {
+            "$ref": "#/components/schemas/Level"
           },
           "dueDate": {
             "type": [

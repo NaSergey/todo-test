@@ -5,6 +5,7 @@ model Todo {
   title     String
   description String?
   priority Priority @default(MEDIUM)
+  level Variant @default(LOW)
   pinned    Boolean  @default(false)
   dueDate   DateTime?
   completed Boolean  @default(false)
@@ -20,5 +21,9 @@ model Todo {
 enum Priority {
   LOW
   MEDIUM
+  HIGH
+}
+enum Variant {
+  LOW
   HIGH
 }

@@ -5,8 +5,13 @@ export const Priority = {
   MEDIUM: "MEDIUM",
   HIGH: "HIGH",
 } as const;
+export const Level = {
+  LOW: "LOW",
+  HIGH: "HIGH",
+} as const;
 
 export type Priority = components["schemas"]["Priority"];
+export type Level = components["schemas"]["Level"];
 export type TodoParticipant = components["schemas"]["TodoParticipant"];
 
 export type Todo = components["schemas"]["Todo"];

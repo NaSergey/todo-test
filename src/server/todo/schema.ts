@@ -2,12 +2,14 @@ import "@/server/openapi/zod-extend";
 import { z } from "zod";
 
 const prioritySchema = z.enum(["LOW", "MEDIUM", "HIGH"]).openapi("Priority");
+const levelSchema = z.enum(["LOW", "HIGH"]).openapi("Level");
 
 export const createTodoSchema = z
   .object({
     title: z.string().trim().min(1),
     description: z.string().nullable().optional(),
     priority: prioritySchema.optional(),
+    level: levelSchema.optional(),
     dueDate: z.coerce.date().nullable().optional(),
     creatorId: z.number().int(),
     assigneeId: z.number().int().nullable().optional(),
@@ -19,6 +21,7 @@ export const updateTodoSchema = z
     title: z.string().trim().min(1).optional(),
     description: z.string().nullable().optional(),
     priority: prioritySchema.optional(),
+    level: levelSchema.optional(),
     dueDate: z.coerce.date().nullable().optional(),
     assigneeId: z.number().int().nullable().optional(),
     completed: z.boolean().optional(),
@@ -41,6 +44,7 @@ export const todoSchema = z
     title: z.string(),
     description: z.string().nullable(),
     priority: prioritySchema,
+    level: levelSchema,
     pinned: z.boolean(),
     dueDate: z.coerce.date().nullable(),
     completed: z.boolean(),
