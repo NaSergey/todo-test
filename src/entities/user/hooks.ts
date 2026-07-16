@@ -1,5 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { rqClient } from "@/shared/api/client";
+import { getErrorMessage } from "@/shared/api/error/error";
 import type { User } from "./types";
 
 
@@ -12,6 +13,9 @@ export function useCreateUser() {
 
   return rqClient.useMutation("post", "/api/users", {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["get", "/api/users"] }),
+    onError: (error) => {
+      alert(getErrorMessage(error, "Failed to create user"));
+    },
   });
 }
 

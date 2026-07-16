@@ -92,8 +92,8 @@ export function TodoBoard({ todos, users }: TodoBoardProps) {
               users={users}
               defaultAssigneeId={column.userId ?? undefined}
               onCancel={() => setAddingForColumn(null)}
-              onSubmit={(data) => {
-                createTodo.mutate({ body: data });
+              onSubmit={async (data) => {
+                await createTodo.mutateAsync({ body: data });
                 setAddingForColumn(null);
               }}
             />

@@ -22,8 +22,8 @@ export function TodoItem({ todo, users }: TodoItemProps) {
         todo={todo}
         users={users}
         onCancel={() => setIsEditing(false)}
-        onSubmit={(data) => {
-          updateTodo.mutate({ params: { path: { id: todo.id } }, body: data });
+        onSubmit={async (data) => {
+          await updateTodo.mutateAsync({ params: { path: { id: todo.id } }, body: data });
           setIsEditing(false);
         }}
       />

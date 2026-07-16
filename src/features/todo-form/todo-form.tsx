@@ -1,70 +1,41 @@
-import { useState, type FormEvent } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import { Priority,
-  type CreateTodoInput,
-  type Todo,
-  type TodoParticipant,
-} from "@/entities/todo/types";
 import { TodoFormFields, toUserOptions } from "./todo-form-fields";
-
-type TodoFormValues = Omit<CreateTodoInput, "creatorId">;
-
-type TodoFormProps = {
-  users: TodoParticipant[];
-  defaultAssigneeId?: number;
-  onCancel?: () => void;
-} & (
-  | { todo: Todo; onSubmit: (data: TodoFormValues) => void }
-  | { todo?: undefined; onSubmit: (data: CreateTodoInput) => void }
-);
+import { buildDefaultValues } from "./default-values";
+import type { TodoFormProps, TodoFormState, TodoFormValues } from "./types";
 
 export function TodoForm(props: TodoFormProps) {
   const { users, todo, defaultAssigneeId, onCancel } = props;
-  const [creatorId, setCreatorId] = useState("");
-  const [title, setTitle] = useState(todo?.title ?? "");
-  const [description, setDescription] = useState(todo?.description ?? "");
-  const [priority, setPriority] = useState<Priority>(todo?.priority ?? Priority.MEDIUM);
-  const [dueDate, setDueDate] = useState(todo?.dueDate ? todo.dueDate.slice(0, 10) : "");
-  const [assigneeId, setAssigneeId] = useState(
-    todo?.assignee
-      ? String(todo.assignee.id)
-      : defaultAssigneeId
-        ? String(defaultAssigneeId)
-        : ""
-  );
+  const { register, handleSubmit, reset } = useForm<TodoFormState>({
+    defaultValues: buildDefaultValues(todo, defaultAssigneeId),
+  });
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    if (!title.trim() || (!todo && !creatorId)) return;
-
-    const values: TodoFormValues = {
-      title: title.trim(),
-      description: description.trim() || null,
-      priority,
-      dueDate: dueDate || null,
-      assigneeId: assigneeId ? Number(assigneeId) : null,
+  async function onSubmit(values: TodoFormState) {
+    const payload: TodoFormValues = {
+      title: values.title.trim(),
+      description: values.description.trim() || null,
+      priority: values.priority,
+      dueDate: values.dueDate || null,
+      assigneeId: values.assigneeId ? Number(values.assigneeId) : null,
     };
 
-    if (props.todo) {
-      props.onSubmit(values);
-    } else {
-      props.onSubmit({ ...values, creatorId: Number(creatorId) });
-    }
-
-    if (!todo) {
-      setTitle("");
-      setDescription("");
-      setPriority(Priority.MEDIUM);
-      setDueDate("");
-      setAssigneeId(defaultAssigneeId ? String(defaultAssigneeId) : "");
+    try {
+      if (props.todo) {
+        await props.onSubmit(payload);
+      } else {
+        await props.onSubmit({ ...payload, creatorId: Number(values.creatorId) });
+        reset(buildDefaultValues(undefined, defaultAssigneeId));
+      }
+    } catch {
+      // The mutation's onError already alerts the user; keep the entered values so they can retry.
     }
   }
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900"
     >
       {!todo && !onCancel && (
@@ -76,33 +47,21 @@ export function TodoForm(props: TodoFormProps) {
       {!todo && (
         <Select
           label="От кого"
-          value={creatorId}
-          onChange={(e) => setCreatorId(e.target.value)}
           placeholder="Выберите автора"
           options={toUserOptions(users)}
           required
+          {...register("creatorId")}
         />
       )}
 
       <Input
         label="Название"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
         placeholder="Что нужно сделать?"
         required
+        {...register("title")}
       />
 
-      <TodoFormFields
-        users={users}
-        description={description}
-        onDescriptionChange={setDescription}
-        priority={priority}
-        onPriorityChange={setPriority}
-        assigneeId={assigneeId}
-        onAssigneeIdChange={setAssigneeId}
-        dueDate={dueDate}
-        onDueDateChange={setDueDate}
-      />
+      <TodoFormFields users={users} register={register} />
 
       <div className="flex gap-2">
         <Button type="submit" className="flex-1">

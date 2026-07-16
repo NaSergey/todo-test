@@ -23,7 +23,7 @@ export function MainPage({ initialUsers }: MainPageProps) {
     <div className="mx-auto flex w-full max-w-11/12 flex-1 flex-col gap-6 px-4 py-6 lg:flex-row lg:py-10">
       <aside className="grid shrink-0 gap-4 sm:grid-cols-2 sm:items-start lg:flex lg:w-64 lg:flex-col lg:items-stretch">
         <CreateUserForm />
-        <TodoForm users={users} onSubmit={(data) => createTodo.mutate({ body: data })} />
+        <TodoForm users={users} onSubmit={(data) => createTodo.mutateAsync({ body: data })} />
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col gap-6">

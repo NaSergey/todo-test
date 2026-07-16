@@ -1,7 +1,9 @@
+import type { UseFormRegister } from "react-hook-form";
 import { Input } from "@/shared/ui/input";
 import { Select } from "@/shared/ui/select";
-import type { Priority, TodoParticipant } from "@/entities/todo/types";
+import type { TodoParticipant } from "@/entities/todo/types";
 import { PRIORITY_OPTIONS } from "@/entities/todo/priority";
+import type { TodoFormState } from "./types";
 
 export function toUserOptions(users: TodoParticipant[]) {
   return users.map((user) => ({ value: String(user.id), label: user.name }));
@@ -9,58 +11,25 @@ export function toUserOptions(users: TodoParticipant[]) {
 
 type TodoFormFieldsProps = {
   users: TodoParticipant[];
-  description: string;
-  onDescriptionChange: (value: string) => void;
-  priority: Priority;
-  onPriorityChange: (value: Priority) => void;
-  assigneeId: string;
-  onAssigneeIdChange: (value: string) => void;
-  dueDate: string;
-  onDueDateChange: (value: string) => void;
+  register: UseFormRegister<TodoFormState>;
 };
 
 /** Shared field set for creating/editing a todo — everything except title and creator. */
-export function TodoFormFields({
-  users,
-  description,
-  onDescriptionChange,
-  priority,
-  onPriorityChange,
-  assigneeId,
-  onAssigneeIdChange,
-  dueDate,
-  onDueDateChange,
-}: TodoFormFieldsProps) {
+export function TodoFormFields({ users, register }: TodoFormFieldsProps) {
   return (
     <>
-      <Input
-        label="Описание"
-        value={description}
-        onChange={(e) => onDescriptionChange(e.target.value)}
-        placeholder="Необязательно"
-      />
+      <Input label="Описание" placeholder="Необязательно" {...register("description")} />
 
-      <Select
-        label="Приоритет"
-        value={priority}
-        onChange={(e) => onPriorityChange(e.target.value as Priority)}
-        options={PRIORITY_OPTIONS}
-      />
+      <Select label="Приоритет" options={PRIORITY_OPTIONS} {...register("priority")} />
 
       <Select
         label="Исполнитель"
-        value={assigneeId}
-        onChange={(e) => onAssigneeIdChange(e.target.value)}
         placeholder="Не назначено"
         options={toUserOptions(users)}
+        {...register("assigneeId")}
       />
 
-      <Input
-        label="Срок"
-        type="date"
-        value={dueDate}
-        onChange={(e) => onDueDateChange(e.target.value)}
-      />
+      <Input label="Срок" type="date" {...register("dueDate")} />
     </>
   );
 }
