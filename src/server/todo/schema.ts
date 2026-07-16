@@ -1,5 +1,6 @@
 import "@/server/openapi/zod-extend";
 import { z } from "zod";
+import { dueDateSchema } from "@/server/shared/schema/data-schema";
 
 const prioritySchema = z.enum(["LOW", "MEDIUM", "HIGH"]).openapi("Priority");
 
@@ -8,7 +9,7 @@ export const createTodoSchema = z
     title: z.string().trim().min(1),
     description: z.string().nullable().optional(),
     priority: prioritySchema.optional(),
-    dueDate: z.coerce.date().nullable().optional(),
+    dueDate: dueDateSchema,
     creatorId: z.number().int(),
     assigneeId: z.number().int().nullable().optional(),
   })
