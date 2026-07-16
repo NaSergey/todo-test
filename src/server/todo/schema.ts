@@ -1,6 +1,6 @@
 import "@/server/openapi/zod-extend";
 import { z } from "zod";
-import { dueDateSchema } from "@/server/shared/data-schema";
+import { dueDateSchema } from "@/server/shared/schema/data-schema";
 
 const prioritySchema = z.enum(["LOW", "MEDIUM", "HIGH"]).openapi("Priority");
 

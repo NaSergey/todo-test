@@ -1,12 +1,15 @@
 import { db } from "@/server/db";
 import type { createTodoSchema, updateTodoSchema } from "./schema";
 import type { z } from "zod";
+import { assertTaskLimit } from "./rules/assert-assign";
+
 
 const participantSelect = { select: { id: true, name: true } } as const;
 
-export function createTodo(input: z.infer<typeof createTodoSchema>) {
+export async function createTodo(todo: z.infer<typeof createTodoSchema>) {
+  await assertTaskLimit(todo.assigneeId);
   return db.todo.create({
-    data: input,
+    data: todo,
     include: { creator: participantSelect, assignee: participantSelect },
   });
 }
@@ -18,14 +21,14 @@ export function listTodos() {
   });
 }
 
-export function updateTodo(id: number, input: z.infer<typeof updateTodoSchema>) {
+export async function updateTodo(id: number, todo: z.infer<typeof updateTodoSchema>) {
+  await assertTaskLimit(todo.assigneeId, id);
   return db.todo.update({
     where: { id },
-    data: input,
+    data: todo,
     include: { creator: participantSelect, assignee: participantSelect },
   });
 }
-
 export function deleteTodo(id: number) {
   return db.todo.delete({ where: { id } });
 }
