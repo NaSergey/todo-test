@@ -1,4 +1,4 @@
-import { listUsers } from "@/server/user/service";
+import { listUsers } from "@/server/endpoint/user/service";
 import { MainPage } from "./(main)/main-page";
 
 export default async function Home() {
