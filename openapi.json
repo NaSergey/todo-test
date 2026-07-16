@@ -369,6 +369,16 @@
     "/api/todos": {
       "get": {
         "summary": "List all todos",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "search",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of todos",

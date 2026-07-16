@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { mapPrismaError } from "@/server/http/prisma-error";
 import { parseId } from "@/server/http/id-schema";
 import { validateBody } from "@/server/http/validate-body";
-import { updateTodoSchema } from "@/server/todo/schema";
-import { updateTodo, deleteTodo } from "@/server/todo/service";
+import { updateTodoSchema } from "@/server/endpoint/todo/schema";
+import { updateTodo, deleteTodo } from "@/server/endpoint/todo/service";
 import { DomainError } from "@/server/shared/errors";
 import { errorResponse } from "@/server/http/error-response";
 

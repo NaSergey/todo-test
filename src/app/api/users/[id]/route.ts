@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { mapPrismaError } from "@/server/http/prisma-error";
 import { parseId } from "@/server/http/id-schema";
-import { deleteUser } from "@/server/user/service";
+import { deleteUser } from "@/server/endpoint/user/service";
 
 type RouteParams = { params: Promise<{ id: string }> };
 

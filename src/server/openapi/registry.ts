@@ -1,8 +1,8 @@
 import "./zod-extend";
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
-import { createUserSchema, userSchema } from "@/server/user/schema";
-import { createTodoSchema, todoSchema, updateTodoSchema } from "@/server/todo/schema";
+import { createUserSchema, userSchema } from "@/server/endpoint/user/schema";
+import { createTodoSchema, todoSchema, updateTodoSchema } from "@/server/endpoint/todo/schema";
 import { errorResponseSchema } from "@/server/http/error-response";
 
 export const registry = new OpenAPIRegistry();
@@ -55,6 +55,7 @@ registry.registerPath({
 registry.registerPath({
   method: "get",
   path: "/api/todos",
+  request: { query: z.object({ search: z.string().optional() }) },
   summary: "List all todos",
   responses: {
     200: {

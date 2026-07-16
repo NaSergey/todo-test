@@ -146,7 +146,9 @@ export interface paths {
         /** List all todos */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    search?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;

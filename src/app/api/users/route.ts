@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createUserSchema } from "@/server/user/schema";
-import { createUser, listUsers } from "@/server/user/service";
+import { createUserSchema } from "@/server/endpoint/user/schema";
+import { createUser, listUsers } from "@/server/endpoint/user/service";
 import { mapPrismaError } from "@/server/http/prisma-error";
 import { validateBody } from "@/server/http/validate-body";
 

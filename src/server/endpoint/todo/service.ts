@@ -14,8 +14,9 @@ export async function createTodo(todo: z.infer<typeof createTodoSchema>) {
   });
 }
 
-export function listTodos() {
+export function listTodos(search: string | undefined) {
   return db.todo.findMany({
+    where: { title: { contains: search } },
     orderBy: { createdAt: "desc" },
     include: { creator: participantSelect, assignee: participantSelect },
   });
