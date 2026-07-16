@@ -20,7 +20,7 @@ export const updateTodoSchema = z
     title: z.string().trim().min(1).optional(),
     description: z.string().nullable().optional(),
     priority: prioritySchema.optional(),
-    dueDate: dueDateSchema,
+    dueDate: z.coerce.date().nullable().optional(),
     assigneeId: z.number().int().nullable().optional(),
     completed: z.boolean().optional(),
     pinned: z.boolean().optional(),

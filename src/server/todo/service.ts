@@ -2,6 +2,7 @@ import { db } from "@/server/db";
 import type { createTodoSchema, updateTodoSchema } from "./schema";
 import type { z } from "zod";
 import { assertTaskLimit } from "./rules/assert-assign";
+import { DomainError } from "../shared/errors";
 
 
 const participantSelect = { select: { id: true, name: true } } as const;
