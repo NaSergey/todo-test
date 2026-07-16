@@ -61,14 +61,18 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
                 /** @description Email already exists */
                 409: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
             };
         };
@@ -112,14 +116,18 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
                 /** @description User not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
             };
         };
@@ -138,7 +146,9 @@ export interface paths {
         /** List all todos */
         get: {
             parameters: {
-                query?: never;
+                query?: {
+                    search?: string;
+                };
                 header?: never;
                 path?: never;
                 cookie?: never;
@@ -185,7 +195,9 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
             };
         };
@@ -229,14 +241,18 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
                 /** @description Todo not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
             };
         };
@@ -272,14 +288,18 @@ export interface paths {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
                 /** @description Todo not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
             };
         };
@@ -294,6 +314,14 @@ export interface components {
             name: string;
             /** Format: email */
             email: string;
+        };
+        ErrorResponse: {
+            error: {
+                message: string;
+                fieldErrors?: {
+                    [key: string]: string[];
+                };
+            };
         };
         CreateUserInput: {
             name: string;

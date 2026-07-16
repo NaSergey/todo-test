@@ -26,6 +26,34 @@
           "email"
         ]
       },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "fieldErrors": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
       "CreateUserInput": {
         "type": "object",
         "properties": {
@@ -273,10 +301,24 @@
             }
           },
           "400": {
-            "description": "Validation error"
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "409": {
-            "description": "Email already exists"
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -302,10 +344,24 @@
             "description": "Deleted"
           },
           "400": {
-            "description": "Invalid id"
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "404": {
-            "description": "User not found"
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -313,6 +369,16 @@
     "/api/todos": {
       "get": {
         "summary": "List all todos",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "search",
+            "in": "query"
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of todos",
@@ -352,7 +418,14 @@
             }
           },
           "400": {
-            "description": "Validation error or unknown creatorId/assigneeId"
+            "description": "Validation error or unknown creatorId/assigneeId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -394,10 +467,24 @@
             }
           },
           "400": {
-            "description": "Validation error, invalid id, or unknown assigneeId"
+            "description": "Validation error, invalid id, or unknown assigneeId",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Todo not found"
+            "description": "Todo not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -421,10 +508,24 @@
             "description": "Deleted"
           },
           "400": {
-            "description": "Invalid id"
+            "description": "Invalid id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
           "404": {
-            "description": "Todo not found"
+            "description": "Todo not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }

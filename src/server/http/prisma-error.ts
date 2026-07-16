@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { Prisma } from "@/server/generated/prisma/client";
+import { errorResponse } from "./error-response";
 
 const defaults: Record<string, { status: number; message: string }> = {
   P2025: { status: 404, message: "Not found" },
@@ -15,5 +15,5 @@ export function mapPrismaError(e: unknown, overrides: Partial<Record<keyof typeo
   if (!known) return null;
 
   const message = overrides[e.code as keyof typeof defaults] ?? known.message;
-  return NextResponse.json({ error: message }, { status: known.status });
+  return errorResponse(known.status, message);
 }
