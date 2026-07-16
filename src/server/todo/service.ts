@@ -2,7 +2,6 @@ import { db } from "@/server/db";
 import type { createTodoSchema, updateTodoSchema } from "./schema";
 import type { z } from "zod";
 import { assertTaskLimit } from "./rules/assert-assign";
-import { DomainError } from "../shared/errors";
 
 
 const participantSelect = { select: { id: true, name: true } } as const;
@@ -23,7 +22,12 @@ export function listTodos() {
 }
 
 export async function updateTodo(id: number, todo: z.infer<typeof updateTodoSchema>) {
-  await assertTaskLimit(todo.assigneeId, id);
+  const existingTodo = await db.todo.findUnique({ where: { id } });
+
+  if (todo.assigneeId !== undefined && todo.assigneeId !== existingTodo?.assigneeId) {
+    await assertTaskLimit(todo.assigneeId, id);
+  }
+
   return db.todo.update({
     where: { id },
     data: todo,
