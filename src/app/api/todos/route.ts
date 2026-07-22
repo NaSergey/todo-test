@@ -5,10 +5,15 @@ import { mapPrismaError } from "@/server/http/prisma-error";
 import { validateBody } from "@/server/http/validate-body";
 import { errorResponse } from "@/server/http/error-response";
 import { DomainError } from "@/server/shared/errors";
+import { Priority } from "@/server/generated/prisma/browser";
+
 
 export async function GET(req: NextRequest) {
   const search = req.nextUrl.searchParams.get("search") ?? undefined;
-  const todos = await listTodos(search);
+  const priority = req.nextUrl.searchParams.get("priority") ?? undefined;
+  const completed = req.nextUrl.searchParams.get("completed") ?? undefined;
+
+  const todos = await listTodos({ search, priority: priority as Priority | undefined,   completed: completed === "true" ? true : completed === "false" ? false : undefined });
   return NextResponse.json(todos);
 }
 

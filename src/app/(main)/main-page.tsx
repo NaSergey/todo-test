@@ -7,6 +7,7 @@ import type { User } from "@/entities/user/types";
 import { TodoForm } from "@/features/todo-form/todo-form";
 import { CreateUserForm } from "@/features/create-user/create-user-form";
 import { TodoSearch } from "@/features/todo-search/todo-search";
+import { TodoFilters, type TodoFiltersValue } from "@/features/todo-filters/todo-filters";
 import { TodoBoard } from "@/app/(main)/components/todo-board/todo-board";
 
 type MainPageProps = {
@@ -16,7 +17,8 @@ type MainPageProps = {
 export function MainPage({ initialUsers }: MainPageProps) {
   const { data: users = [] } = useUsers(initialUsers);
   const [search, setSearch] = useState("");
-  const { data: todos = [] } = useAllTodos(search);
+  const [filters, setFilters] = useState<TodoFiltersValue>({});
+  const { data: todos = [] } = useAllTodos(search, filters.priority, filters.completed);
   const createTodo = useCreateTodo();
 
   return (
@@ -27,7 +29,10 @@ export function MainPage({ initialUsers }: MainPageProps) {
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col gap-6">
-        <TodoSearch onSearchChange={setSearch} />
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <TodoSearch onSearchChange={setSearch} />
+          <TodoFilters onFilterChange={setFilters} />
+        </div>
         <TodoBoard todos={todos} users={users} />
       </main>
     </div>

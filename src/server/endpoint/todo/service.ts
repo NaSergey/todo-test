@@ -2,6 +2,7 @@ import { db } from "@/server/db";
 import type { createTodoSchema, updateTodoSchema } from "./schema";
 import type { z } from "zod";
 import { assertTaskLimit } from "./rules/assert-assign";
+import { Priority } from "@/server/generated/prisma/browser";
 
 
 const participantSelect = { select: { id: true, name: true } } as const;
@@ -14,9 +15,13 @@ export async function createTodo(todo: z.infer<typeof createTodoSchema>) {
   });
 }
 
-export function listTodos(search: string | undefined) {
+export function listTodos({ search, priority, completed }: { search?: string; priority?: Priority; completed?: boolean }) {
   return db.todo.findMany({
-    where: { title: { contains: search } },
+    where: {
+      title: { contains: search },
+      priority,
+      completed,
+    },
     orderBy: { createdAt: "desc" },
     include: { creator: participantSelect, assignee: participantSelect },
   });

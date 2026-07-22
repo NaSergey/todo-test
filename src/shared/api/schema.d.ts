@@ -148,6 +148,8 @@ export interface paths {
             parameters: {
                 query?: {
                     search?: string;
+                    priority?: "LOW" | "MEDIUM" | "HIGH";
+                    completed?: boolean | null;
                 };
                 header?: never;
                 path?: never;

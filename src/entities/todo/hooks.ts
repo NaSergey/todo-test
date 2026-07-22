@@ -1,9 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { rqClient } from "@/shared/api/client";
 import { getErrorMessage } from "@/shared/api/error/error";
+import { Priority } from "@/entities/todo/types"; 
 
-export function useAllTodos(search?: string) {
-  return rqClient.useQuery("get", "/api/todos", { params: { query: { search } } });
+export function useAllTodos(search?: string, priority?: Priority, completed?: boolean) {
+  return rqClient.useQuery("get", "/api/todos", { params: { query: { search, priority, completed } } });
 }
 
 export function useCreateTodo() {

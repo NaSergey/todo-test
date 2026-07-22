@@ -55,7 +55,11 @@ registry.registerPath({
 registry.registerPath({
   method: "get",
   path: "/api/todos",
-  request: { query: z.object({ search: z.string().optional() }) },
+  request: { query: z.object({
+  search: z.string().optional(),
+  priority: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+  completed: z.coerce.boolean().optional(),
+}) },
   summary: "List all todos",
   responses: {
     200: {
